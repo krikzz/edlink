@@ -7,6 +7,7 @@ namespace Edlink.DEV_GBA {
 
         const int BMOD_GBA_REBOOT = 0x4252;//'RB' reboot request
         const int BMOD_GBA_VDUMP = 0x4456;//'VD' vram dump
+        const int BMOD_GBA_GSTART = 0x5347;//'GS' game start
 
         public const int RST_MODE_SOFT = 0;
         public const int RST_MODE_HARD = 1;
@@ -34,11 +35,28 @@ namespace Edlink.DEV_GBA {
             dev.SetBootMode(BMOD_GBA_VDUMP);
             dump_addr = link.Rx32();
 
-
             dev.MemRD(dump_addr, vram, 0, 96 * 1024);
             dev.MemRD(dump_addr + 96 * 1024, palette, 0, 1024);
             dev.MemRD(dump_addr + 97 * 1024, regs, 0, 1024);
         }
+
+        public void Run(string path) {
+
+            dev.SetBootMode(BMOD_GBA_GSTART);
+
+            int resp = link.WaitResp(1000);
+            if (resp != 0) {
+                throw new Exception("mack: cmd error: " + resp.ToString("X2"));
+            }
+
+            dev.FifoTxString(Link.GetDevPath(path));
+
+            resp = link.WaitResp(4000);
+            if (resp != 0) {
+                throw new Exception("mcmd: cmd error: " + resp.ToString("X2"));
+            }
+        }
+
 
         void ResetToMenu_hard() {
 

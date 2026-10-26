@@ -83,6 +83,8 @@
     <Compile Include="DEV_EDN8\MenuCmd.cs" />
     <Compile Include="DEV_EDN8\MenuImage.cs" />
     <Compile Include="DEV_EDN8\TestMapper.cs" />
+    <Compile Include="DEV_SMC\DeviceCmd.cs" />
+    <Compile Include="DEV_SMC\DeviceIO.cs" />
     <Compile Include="DEV_TED\DeviceCmd.cs" />
     <Compile Include="DEV_TED\DeviceIO.cs" />
     <Compile Include="DEV_TED\Diagnostics.cs" />

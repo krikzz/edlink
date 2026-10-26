@@ -41,6 +41,14 @@ namespace Edlink.DEV_GBA {
             }
         }
 
+        public override void Run(string rom_path, string fpga_path) {
+
+            string app_dst;
+
+            app_dst = base.AppDeploy(rom_path, fpga_path);
+            mcmd.Run(app_dst);
+        }
+
         public override void Screen(string path) {
 
             byte[] vram = new byte[96 * 1024];
@@ -51,7 +59,7 @@ namespace Edlink.DEV_GBA {
             MenuImage.MakeImage(path, vram, palette, regs);
         }
 
-         public override string DevInf() {
+        public override string DevInf() {
 
             string msg = "";
 

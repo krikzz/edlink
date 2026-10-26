@@ -18,6 +18,8 @@ namespace Edlink.Device {
                     return new DEV_TED.DeviceCmd(link);
                 case DEV_GBA.DeviceIO.PROTOCOL_ID:
                     return new DEV_GBA.DeviceCmd(link);
+                case DEV_SMC.DeviceIO.PROTOCOL_ID:
+                    return new DEV_SMC.DeviceCmd(link);
                 default:
                     throw new NotSupportedException("unsupported protocol id: 0x" + link.ProtocolID.ToString("X02"));
             }

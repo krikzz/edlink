@@ -57,6 +57,8 @@ namespace Edlink.Device {
         const byte EPO_WER_SRC = 0x01;
         const byte EPO_WER_DST = 0x02;
 
+        const uint EPO_WRKEY_FLA = 0x27101983;
+        const uint EPO_WRKEY_SDC = 0xDEADBEEF;
         protected enum EpoType {
             LINK = 0x10,//  link (usb or console)
             LINK_ACK, //    link (usb or console)
@@ -135,7 +137,7 @@ namespace Edlink.Device {
             if (len == 0) {
                 return;
             }
-            EpoWre();
+            EpoWre(EPO_WRKEY_FLA);
             EpoWR(EpoType.FLA, addr, buff, offset, len);
             CheckStatus();
         }
@@ -240,7 +242,7 @@ namespace Edlink.Device {
             link.TxCMD(CMD_BOOT, BOOT_SCMD_LOAD_APP);
             TxApp(data);
 
-            BootWait(2);
+            BootWait(AppTout());
             CheckStatus();
         }
 
@@ -249,7 +251,7 @@ namespace Edlink.Device {
             link.TxCMD(CMD_SYS, SYS_SCMD_BOOT_UPD);
             TxApp(data);
 
-            BootWait(2);
+            BootWait(AppTout());
             CheckStatus();
         }
 
@@ -288,7 +290,9 @@ namespace Edlink.Device {
             }
         }
 
-
+        protected virtual int AppTout() {
+            return 2;
+        }
         //************************************************************************************************ private
         int GetNresp(int resp) {
             link.TxCMD(CMD_NRESP);
@@ -309,10 +313,10 @@ namespace Edlink.Device {
         }
 
 
-        void EpoWre() {
+        void EpoWre(uint wr_key) {
 
             link.TxCMD(CMD_EPO, EPO_SCMD_WRE);
-            link.Tx32(0x27101983);//flash wr protection magic number
+            link.Tx32((int)wr_key);//flash wr protection magic number
         }
 
         void EpoCmd(EpoType ep_src, EpoType ep_dst, int addr_src, int addr_dst, int len) {
